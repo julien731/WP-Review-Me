@@ -48,7 +48,7 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		 * @since 1.0
 		 * @var string
 		 */
-		public $php_version_required = '5.2';
+		public $php_version_required = '5.5';
 
 		/**
 		 * Minimum version of WordPress required to use the library
