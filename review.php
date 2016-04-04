@@ -29,12 +29,6 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 	abstract class WP_Review_Me {
 
 		/**
-		 * @var WP_Review_Me Holds the unique instance of the handler
-		 * @since 1.0
-		 */
-		private static $instance;
-
-		/**
 		 * Library version
 		 *
 		 * @since 1.0
