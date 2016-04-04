@@ -312,5 +312,6 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 
 	// Load integrations
 	require_once( dirname( __FILE__ ) . '/includes/integrations/class-wordpress.php' );
+	require_once( dirname( __FILE__ ) . '/includes/integrations/class-edd.php' );
 
 }
