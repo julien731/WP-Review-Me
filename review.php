@@ -106,8 +106,8 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 				'type'       => '',
 				'slug'       => '',
 				'rating'     => 5,
-				'message'    => sprintf( esc_html__( 'Hey! It&#039;s been a little while that you&#039;ve been using this product. You might not realize it, but users reviews are such a great help to us. We would be so grateful if you could take a minute to leave a review on WordPress.org. Many thanks in advance :)', 'wp-review-me' ) ),
-				'link_label' => esc_html__( 'Click here to leave a review', 'wp-review-me' ),
+				'message'    => sprintf( esc_html__( 'Hey! It&#039;s been a little while that you&#039;ve been using this product. You might not realize it, but user reviews are such a great help to us. We would be so grateful if you could take a minute to leave a review on WordPress.org. Many thanks in advance :)', 'wp-review-me' ) ),
+				'link_label' => esc_html__( 'Click here to leave your review', 'wp-review-me' ),
 				// Parameters used in WP Dismissible Notices Handler
 				'cap'        => 'administrator',
 				'scope'      => 'global',
