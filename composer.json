@@ -13,7 +13,7 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "julien731/wp-dismissible-notices-handler": "dev-master"
+    "julien731/wp-dismissible-notices-handler": "1.*"
   },
   "autoload": {
     "files": ["review.php"]
