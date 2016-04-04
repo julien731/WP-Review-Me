@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 if ( ! class_exists( 'WP_Review_Me' ) ) {
 
-	final class WP_Review_Me {
+	abstract class WP_Review_Me {
 
 		/**
 		 * @var WP_Review_Me Holds the unique instance of the handler
@@ -312,16 +312,11 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		 * @since 1.0
 		 * @return string
 		 */
-		protected function get_message() {
-
-			$message = $this->message;
-			$link    = $this->get_review_link();
-			$message = $message . " <a href='$link' target='_blank'>$this->link_label</a>";
-
-			return wp_kses_post( $message );
-
-		}
+		abstract protected function get_message();
 
 	}
+
+	// Load integrations
+	require_once( dirname( __FILE__ ) . '/includes/integrations/class-wordpress.php' );
 
 }
