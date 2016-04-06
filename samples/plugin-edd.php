@@ -226,7 +226,7 @@ if ( ! class_exists( 'WRM_EDD_Bridge' ) ):
 		}
 
 		/**
-		 * Insert the dicount code.
+		 * Insert the discount code.
 		 *
 		 * @since  0.1.0
 		 * @return integer Discount ID
