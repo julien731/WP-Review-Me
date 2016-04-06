@@ -17,6 +17,15 @@
  * @license   GPL-2.0+
  * @link      https://julienliabeuf.com
  * @copyright 2016 Julien Liabeuf
+ *
+ * Plugin Name: WP Review Me EDD Bridge
+ * Plugin URI: https://github.com/julien731/WP-Review-Me
+ * Description: Handles POST requests from a WP Review Me client
+ * Author: Julien Liabeuf
+ * Author URI: https://julienliabeuf.com
+ * Version: 1.0
+ * Text Domain: wp-review-me
+ * Domain Path: languages
  */
 
 // If this file is called directly, abort.
