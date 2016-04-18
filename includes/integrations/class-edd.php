@@ -65,16 +65,15 @@ class WRM_EDD extends WP_Review_Me {
 	/**
 	 * Get the EDD discount default options
 	 *
-	 * Might not look too useful for now because only the discount % can be changed, but if we decided in the future to
-	 * add more discount options this will make our life so much easier.
-	 *
 	 * @since 1.0
 	 * @return array
 	 */
 	private function discount_defaults() {
 
 		$defaults = array(
-			'percentage' => 20,
+			'type'     => 'percentage',
+			'amount'   => 20,
+			'validity' => 30, // In days
 		);
 
 		return $defaults;
@@ -108,7 +107,6 @@ class WRM_EDD extends WP_Review_Me {
 					}
 				});
 
-				return false;
 			}
 		});
 </script>
@@ -159,7 +157,7 @@ class WRM_EDD extends WP_Review_Me {
 	private function query_discount() {
 
 		$endpoint = esc_url( add_query_arg( 'wrm_action', 'discount', $this->edd_url ) );
-		$data     = array( 'wrm_email' => get_bloginfo( 'admin_email' ) ); // Wrap our vars to avoid post names issues
+		$data     = array( 'wrm_email' => get_bloginfo( 'admin_email' ), 'wrm_discount' => $this->discount ); // Wrap our vars to avoid post names issues
 
 		$response = wp_remote_post( $endpoint, array(
 			'method'      => 'POST',
