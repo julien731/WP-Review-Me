@@ -1,6 +1,6 @@
 # WP Review Me
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/julien731/WP-Review-Me/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/julien731/WP-Review-Me/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/julien731/WP-Review-Me/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/julien731/WP-Review-Me/?branch=develop)
 
 Are you distributing WordPress themes or plugins on WordPress.org? Then you know how important reviews are.
 
