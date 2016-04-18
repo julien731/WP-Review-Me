@@ -235,6 +235,24 @@ if ( ! class_exists( 'WRM_EDD_Bridge' ) ):
 		}
 
 		/**
+		 * Get the EDD discount default options
+		 *
+		 * @since 1.0
+		 * @return array
+		 */
+		private function discount_defaults() {
+
+			$defaults = array(
+				'type'     => 'percentage',
+				'amount'   => 20,
+				'validity' => 30, // In days
+			);
+
+			return $defaults;
+
+		}
+
+		/**
 		 * Insert the discount code.
 		 *
 		 * @since  0.1.0
@@ -242,9 +260,17 @@ if ( ! class_exists( 'WRM_EDD_Bridge' ) ):
 		 */
 		protected function insert_discount() {
 
-			$type     = isset( $_POST['wrm_discount_type'] ) ? $_POST['wrm_discount_type'] : 'percent';
-			$amount   = isset( $_POST['wrm_discount_amount'] ) ? (int) $_POST['wrm_discount_amount'] : 20;
-			$validity = isset( $_POST['wrm_discount_validity'] ) ? (int) $_POST['wrm_discount_validity'] : 30;
+			$discount = isset( $_POST['wrm_discount'] ) ? wp_parse_args( $_POST['wrm_discount'], $this->discount_defaults() ) : $this->discount_defaults();
+
+			// Make sure the discount type exists
+			if ( ! in_array( $discount['type'], array( 'percent', 'flat' ) ) ) {
+				$discount['type'] = 'percent';
+			}
+
+			// Make sure the discount is not over 100% (for percentage discounts)
+			if ( 'percent' === $discount['type'] && (int) $discount['amount'] > 100 ) {
+				$discount['amount'] = 100;
+			}
 
 			$details = array(
 				'code'              => $this->code,
@@ -252,10 +278,10 @@ if ( ! class_exists( 'WRM_EDD_Bridge' ) ):
 				'status'            => 'active',
 				'uses'              => 0,
 				'max'               => 1,
-				'amount'            => $amount,
+				'amount'            => $discount['amount'],
 				'start'             => date( 'Y-m-d' ),
-				'expiration'        => date( 'Y-m-d', strtotime( date( 'Y-m-d' ) . "+ $validity days" ) ),
-				'type'              => $type,
+				'expiration'        => date( 'Y-m-d', strtotime( date( 'Y-m-d' ) . "+ {$discount['validity']} days" ) ),
+				'type'              => $discount['type'],
 				'min_price'         => 0,
 				'products'          => array(),
 				'product_condition' => 'any',
