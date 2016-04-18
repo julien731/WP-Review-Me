@@ -37,8 +37,8 @@ class WRM_WordPress extends WP_Review_Me {
 	protected function get_message() {
 
 		$message = $this->message;
-		$link    = $this->get_review_link();
-		$message = $message . " <a href='$link' target='_blank'>$this->link_label</a>";
+		$link    = $this->get_review_link_tag();
+		$message = $message . ' ' . $link;
 
 		return wp_kses_post( $message );
 

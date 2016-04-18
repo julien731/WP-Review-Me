@@ -61,6 +61,14 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		protected $key;
 
 		/**
+		 * Link unique ID
+		 *
+		 * @since 1.0
+		 * @var string
+		 */
+		public $link_id;
+
+		/**
 		 * WP_Review_Me constructor.
 		 *
 		 * @since 1.0
@@ -80,7 +88,8 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 			$this->scope      = $args['scope'];
 
 			// Set the unique identifying key for this instance
-			$this->key = 'wrm_' . substr( md5( plugin_basename( __FILE__ ) ), 0, 20 );
+			$this->key     = 'wrm_' . substr( md5( plugin_basename( __FILE__ ) ), 0, 20 );
+			$this->link_id = 'wrm-review-link-' . $this->key;
 
 			// Instantiate
 			$this->init();
@@ -163,6 +172,9 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 					return;
 				}
 			}
+
+			add_action( 'admin_footer', array( $this, 'script' ) );
+			add_action( 'wp_ajax_wrm_clicked_review', array( $this, 'dismiss_notice' ) );
 
 			// And let's roll... maybe.
 			$this->maybe_prompt();
@@ -282,6 +294,20 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		}
 
 		/**
+		 * Get the complete link tag
+		 *
+		 * @since 1.0
+		 * @return string
+		 */
+		protected function get_review_link_tag() {
+
+			$link = $this->get_review_link();
+
+			return "<a href='$link' target='_blank' id='$this->link_id'>$this->link_label</a>";
+
+		}
+
+		/**
 		 * Trigger the notice if it is time to ask for a review
 		 *
 		 * @since 1.0
@@ -301,6 +327,85 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		}
 
 		/**
+		 * Echo the JS script in the admin footer
+		 *
+		 * @since 1.0
+		 * @return void
+		 */
+		public function script() { ?>
+
+			<script>
+				jQuery(document).ready(function($) {
+					$('#<?php echo $this->link_id; ?>').on('click', wrmDismiss);
+					function wrmDismiss() {
+
+						var data = {
+							action: 'wrm_clicked_review',
+							id: '<?php echo $this->link_id; ?>'
+						};
+
+						jQuery.ajax({
+							type:'POST',
+							url: ajaxurl,
+							data: data,
+							success:function( data ){
+								console.log(data);
+							}
+						});
+
+					}
+				});
+			</script>
+
+		<?php }
+
+		/**
+		 * Dismiss the notice when the review link is clicked
+		 *
+		 * @since 1.0
+		 * @return void
+		 */
+		public function dismiss_notice() {
+
+			if ( empty( $_POST ) ) {
+				echo 'missing POST';
+				die();
+			}
+
+			if ( ! isset( $_POST['id'] ) ) {
+				echo 'missing ID';
+				die();
+			}
+
+			$id = sanitize_text_field( $_POST['id'] );
+
+			if ( $id !== $this->link_id ) {
+				echo "not this instance's job";
+				die();
+			}
+
+			// Get the DNH notice ID ready
+			$notice_id = DNH()->get_id( str_replace( 'wrm-review-link-', '', $id ) );
+			$dismissed = DNH()->dismiss_notice( $notice_id );
+			
+			echo $dismissed;
+
+			/**
+			 * Fires right after the notice has been dismissed. This allows for various integrations to perform additional tasks.
+			 *
+			 * @since 1.0
+			 *
+			 * @param string $id        The notice ID
+			 * @param string $notice_id The notice ID as defined by the DNH class
+			 */
+			do_action( 'wrm_after_notice_dismissed', $id, $notice_id );
+
+			// Stop execution here
+			die();
+
+		}
+
+		/**
 		 * Get the review prompt message
 		 *
 		 * @since 1.0
@@ -312,5 +417,6 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 
 	// Load integrations
 	require_once( dirname( __FILE__ ) . '/includes/integrations/class-wordpress.php' );
+	require_once( dirname( __FILE__ ) . '/includes/integrations/class-edd.php' );
 
 }
