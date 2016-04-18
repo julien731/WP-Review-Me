@@ -41,10 +41,19 @@ class WRM_EDD extends WP_Review_Me {
 	 */
 	protected $code;
 
-	public function __construct( $args ) {
+	/**
+	 * The confirmation e-mail data
+	 *
+	 * @since 1.0
+	 * @var array
+	 */
+	protected $email;
+
+	public function __construct( $args, $email = array() ) {
 
 		$this->edd_url  = isset( $args['edd_url'] ) ? esc_url( $args['edd_url'] ) : '';
 		$this->discount = isset( $args['edd_discount'] ) && is_array( $args['edd_discount'] ) ? wp_parse_args( $args['edd_discount'], $this->discount_defaults() ) : $this->discount_defaults();
+		$this->email    = $email;
 
 		// Call parent constructor
 		parent::__construct( $args );
@@ -132,10 +141,65 @@ class WRM_EDD extends WP_Review_Me {
 		if ( 'success' === $body->result ) {
 			$this->code = trim( $body->message );
 			$this->email_code();
-			return $body->message;
+			return $this->code;
 		}
 
 		return $body->message;
+
+	}
+
+	/**
+	 * Get the e-mail data
+	 *
+	 * @since 1.0
+	 * @return array
+	 */
+	protected function get_email_data() {
+
+		$body = '<p>Hi,</p><p>From our entire team, many thanks for your review.</p><p>While you just spent a few minutes writing it, your testimonial will be a big help to us.</p><p>Many users don\'t realize it but reviews are a key part of the promotion work for our product. This allows us to increase our user base, and thus get more support for improving our product.</p><p>As a thank you from us, please find hereafter your discount code for a {{amount}} discount valid until {{expiration}}:</p><p>Your discount code: <strong>{{code}}</strong></p><p>Enjoy the product!</p>';
+
+		if ( isset( $this->email['body'] ) ) {
+			$body = $this->email['body'];
+		}
+
+		$tags = array( 'code', 'amount', 'expiration' );
+
+		foreach ( $tags as $tag ) {
+
+			$find = '{{' . $tag . '}}';
+
+			switch ( $tag ) {
+
+				case 'code':
+					$body = str_replace( $find, $this->code, $body );
+					break;
+
+				case 'amount':
+
+					$amount = $this->discount['amount'];
+
+					if ( 'percentage' === $this->discount['type'] ) {
+						$amount = $amount . '%';
+					}
+
+					$body = str_replace( $find, $amount, $body );
+					break;
+
+				case 'expiration':
+					$expiration = date( get_option( 'date_format' ), time() + ( (int) $this->discount['validity'] * 86400 ) );
+					$body       = str_replace( $find, $expiration, $body );
+					break;
+
+			}
+
+		}
+
+		$email['body']       = $body;
+		$email['subject']    = isset( $this->email['subject'] ) ? sanitize_text_field( $this->email['subject'] ) : esc_html__( 'Your discount code', 'wp-review-me' );
+		$email['from_name']  = isset( $this->email['from_name'] ) ? sanitize_text_field( $this->email['from_name'] ) : get_bloginfo( 'name' );
+		$email['from_email'] = isset( $this->email['from_email'] ) ? sanitize_text_field( $this->email['from_email'] ) : get_bloginfo( 'admin_email' );
+
+		return apply_filters( 'wrm_edd_email', $email );
 
 	}
 
@@ -146,7 +210,18 @@ class WRM_EDD extends WP_Review_Me {
 	 * @return bool
 	 */
 	protected function email_code() {
-		// E-mail the $this->code
+
+		$email      = $this->get_email_data();
+		$from_name  = $email['from_name'];
+		$from_email = $email['from_email'];
+		$headers    = array(
+			"MIME-Version: 1.0",
+			"Content-type: text/html; charset=utf-8",
+			"From: $from_name <$from_email>",
+		);
+
+		return wp_mail( get_bloginfo( 'admin_email' ), $email['subject'], $email['body'], $headers );
+
 	}
 
 	/**
