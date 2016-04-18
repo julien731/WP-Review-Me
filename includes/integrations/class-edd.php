@@ -18,14 +18,6 @@ if ( ! defined( 'WPINC' ) ) {
 class WRM_EDD extends WP_Review_Me {
 
 	/**
-	 * Unique link ID
-	 *
-	 * @since 1.0
-	 * @var string
-	 */
-	protected $link_id;
-
-	/**
 	 * URL of the EDD shop
 	 *
 	 * @since 1.0
@@ -57,9 +49,9 @@ class WRM_EDD extends WP_Review_Me {
 		// Call parent constructor
 		parent::__construct( $args );
 
-		// Register our hooks
-		add_action( 'admin_footer', array( $this, 'script' ) );
-		add_action( 'wp_ajax_wrm_edd_discount', array( $this, 'query_discount_ajax' ) );
+		// Register our discount action
+		add_action( 'wrm_after_notice_dismissed', array( $this, 'query_discount_ajax' ), 10, 2 );
+
 	}
 
 	/**
@@ -81,70 +73,24 @@ class WRM_EDD extends WP_Review_Me {
 	}
 
 	/**
-	 * Echo the JS script in the admin footer
-	 *
-	 * @since 1.0
-	 * @return void
-	 */
-	public function script() { ?>
-
-<script>
-		jQuery(document).ready(function($) {
-			$('#<?php echo $this->link_id; ?>').on('click', eddDiscountCode);
-			function eddDiscountCode() {
-
-				var data = {
-					action: 'wrm_edd_discount',
-					id: '<?php echo $this->link_id; ?>'
-				};
-
-				jQuery.ajax({
-					type:'POST',
-					url: ajaxurl,
-					data: data,
-					success:function( data ){
-						console.log(data);
-					}
-				});
-
-			}
-		});
-</script>
-
-	<?php }
-
-	/**
 	 * Trigger the EDD discount query via Ajax
 	 *
 	 * @since 1.0
+	 *
+	 * @param string $link_id Unique ID of the link clicked to generate the discount
+	 *
 	 * @return void
 	 */
-	public function query_discount_ajax() {
+	public function query_discount_ajax( $link_id ) {
 
-		if ( empty( $_POST ) ) {
-			echo 'missing POST';
-			die();
-		}
-
-		if ( ! isset( $_POST['id'] ) ) {
-			echo 'missing ID';
-			die();
-		}
-
-		$id = sanitize_text_field( $_POST['id'] );
-
-		if ( $id !== $this->link_id ) {
+		// Not this notice. Abort.
+		if ( $link_id !== $this->link_id ) {
 			echo 'not this instance job';
-			die();
-		}
 
-		if ( '' === $this->edd_url ) {
-			echo 'no shop URL';
-			die();
+			return;
 		}
 
 		echo $this->query_discount();
-		die();
 
 	}
 
@@ -154,7 +100,7 @@ class WRM_EDD extends WP_Review_Me {
 	 * @since 1.0
 	 * @return string|true
 	 */
-	private function query_discount() {
+	protected function query_discount() {
 
 		$endpoint = esc_url( add_query_arg( 'wrm_action', 'discount', $this->edd_url ) );
 		$data     = array( 'wrm_email' => get_bloginfo( 'admin_email' ), 'wrm_discount' => $this->discount ); // Wrap our vars to avoid post names issues
@@ -211,13 +157,9 @@ class WRM_EDD extends WP_Review_Me {
 	 */
 	protected function get_message() {
 
-		// Generate link ID
-		// Can't generate in this constructor because $this->get_message() is called in the parent constructor.
-		$this->link_id = 'wrm-review-edd-' . $this->key;
-
 		$message = $this->message;
-		$link    = $this->get_review_link();
-		$message = $message . " <a href='$link' target='_blank' id='$this->link_id'>$this->link_label</a>";
+		$link    = $this->get_review_link_tag();
+		$message = $message . ' ' . $link;
 
 		return wp_kses_post( $message );
 
