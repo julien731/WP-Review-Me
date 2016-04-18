@@ -34,7 +34,9 @@ Creating a new review prompt would look like that:
 new WRM_WordPress( array( 'days_after' => 10, 'type' => 'plugin', 'slug' => 'my-plugin' ) );
 ```
 
-This is the simplest way of creating a review prompt. If you want to customize it further, a few advanced parameters are available
+This is the simplest way of creating a review prompt. If you want to customize it further, a few advanced parameters are available.
+
+You can see the documentation on the wiki page: https://github.com/julien731/WP-Review-Me/wiki
 
 ## Integrations
 
