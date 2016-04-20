@@ -2,6 +2,8 @@
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/julien731/WP-Review-Me/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/julien731/WP-Review-Me/?branch=develop)
 
+*In order to comply with the WordPress.org guidelines, the EDD integration has been removed and the WooCommerce integration has been dropped.*
+
 Are you distributing WordPress themes or plugins on WordPress.org? Then you know how important reviews are.
 
 The bad thing with reviews is that, while unhappy users love to let the world know, happy users tend to forget reviewing your product.
