@@ -26,7 +26,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 if ( ! class_exists( 'WP_Review_Me' ) ) {
 
-	abstract class WP_Review_Me {
+	class WP_Review_Me {
 
 		/**
 		 * Library version
@@ -411,12 +411,16 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		 * @since 1.0
 		 * @return string
 		 */
-		abstract protected function get_message();
+		protected function get_message() {
+
+			$message = $this->message;
+			$link    = $this->get_review_link_tag();
+			$message = $message . ' ' . $link;
+
+			return wp_kses_post( $message );
+
+		}
 
 	}
-
-	// Load integrations
-	require_once( dirname( __FILE__ ) . '/includes/integrations/class-wordpress.php' );
-	require_once( dirname( __FILE__ ) . '/includes/integrations/class-edd.php' );
 
 }
