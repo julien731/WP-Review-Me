@@ -31,17 +31,9 @@ composer require julien731/wp-review-me
 Creating a new review prompt would look like that:
 
 ```
-new WRM_WordPress( array( 'days_after' => 10, 'type' => 'plugin', 'slug' => 'my-plugin' ) );
+new WP_Review_Me( array( 'days_after' => 10, 'type' => 'plugin', 'slug' => 'my-plugin' ) );
 ```
 
 This is the simplest way of creating a review prompt. If you want to customize it further, a few advanced parameters are available.
 
 You can see the documentation on the wiki page: https://github.com/julien731/WP-Review-Me/wiki
-
-## Integrations
-
-Because users sometimes won't take the time to leave a review without an incentive, there are a couple of integrations made just for that.
-
-### Easy Digital Downloads
-
-With the EDD integration, you can automatically generate a discount code for the user in exchange for a review. See the [documentation for the EDD integration](https://github.com/julien731/WP-Review-Me/wiki/Integration:-EDD).
