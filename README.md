@@ -10,7 +10,7 @@ The bad thing with reviews is that, while unhappy users love to let the world kn
 
 How can you get more good reviews? Simply ask your users.
 
-![WP Review Me](http://i.imgur.com/iZk4Bgu.png)
+![WP Review Me](http://i.imgur.com/9oNGvm2.png)
 
 ## How It Works
 
