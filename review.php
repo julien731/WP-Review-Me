@@ -13,7 +13,7 @@
  *
  * @package   WP Review Me
  * @author    Julien Liabeuf <julien@liabeuf.fr>
- * @version   1.0.1
+ * @version   2.0.1
  * @license   GPL-2.0+
  * @link      https://julienliabeuf.com
  * @copyright 2016 Julien Liabeuf
@@ -34,7 +34,7 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		 * @since 1.0
 		 * @var string
 		 */
-		public $version = '1.0.1';
+		public $version = '2.0.1';
 
 		/**
 		 * Required version of PHP.
