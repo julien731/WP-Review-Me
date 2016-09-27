@@ -271,23 +271,23 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		 */
 		protected function get_review_link() {
 
-			$link = 'https://wordpress.org/support/view/';
+			$link = 'https://wordpress.org/support/';
 
 			switch ( $this->type ) {
 
 				case 'theme':
-					$link .= 'theme-reviews/';
+					$link .= 'theme/';
 					break;
 
 				case 'plugin':
-					$link .= 'plugin-reviews/';
+					$link .= 'plugin/';
 					break;
 
 			}
 
-			$link .= $this->slug;
+			$link .= $this->slug . '/reviews';
 			$link = add_query_arg( 'rate', $this->rating, $link );
-			$link = esc_url( $link . '#postform' );
+			$link = esc_url( $link . '#new-post' );
 
 			return $link;
 
