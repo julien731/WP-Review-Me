@@ -238,7 +238,7 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 		 */
 		public function is_time() {
 
-			$installed = get_option( $this->key, false );
+			$installed = (int) get_option( $this->key, false );
 
 			if ( false === $installed ) {
 				$this->setup_date();
