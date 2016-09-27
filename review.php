@@ -245,7 +245,7 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 				$installed = time();
 			}
 
-			if ( $installed + ( $this->days + 86400 ) > time() ) {
+			if ( $installed + ( $this->days * 86400 ) > time() ) {
 				return false;
 			}
 
