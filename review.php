@@ -240,7 +240,7 @@ if ( ! class_exists( 'WP_Review_Me' ) ) {
 
 			$installed = (int) get_option( $this->key, false );
 
-			if ( false === $installed ) {
+			if ( 0 === $installed ) {
 				$this->setup_date();
 				$installed = time();
 			}
