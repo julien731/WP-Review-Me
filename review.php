@@ -19,11 +19,6 @@
  * @copyright 2016 Julien Liabeuf
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
-
 if ( ! class_exists( 'WP_Review_Me' ) ) {
 
 	class WP_Review_Me {
