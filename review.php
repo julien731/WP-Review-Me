@@ -22,6 +22,14 @@
 if ( ! class_exists( 'WP_Review_Me' ) ) {
 
 	class WP_Review_Me {
+		public $days;
+		public $type;
+		public $rating;
+		public $message;
+		public $link_label;
+		public $cap;
+		public $scope;
+		public $slug;
 
 		/**
 		 * Library version
